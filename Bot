@@ -1,0 +1,234 @@
+pip install python-telegram-bot
+
+
+<dependencies>
+    <dependency>
+        <groupId>org.telegram</groupId>
+        <artifactId>telegrambots</artifactId>
+        <version>5.0.1</version>
+    </dependency>
+</dependencies>
+
+<dependencies>
+    <dependency>
+        <groupId>com.wrapper.spotify</groupId>
+        <artifactId>spotify-web-api-java</artifactId>
+        <version>5.12.1</version>
+    </dependency>
+</dependencies>
+
+
+Write the code:
+
+Create a new Java class, e.g., MusicBot.java, and implement the following code:
+java
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.LongPollingBot;
+
+public class MusicBot extends TelegramLongPollingBot {
+
+    // Replace 'YOUR_BOT_TOKEN' with your actual bot token
+    private static final String BOT_TOKEN = "YOUR_BOT_TOKEN";
+
+    @Override
+    public String getBotUsername() {
+        return "YourBotUsername";
+    }
+
+    @Override
+    public String getBotToken() {
+        return BOT_TOKEN;
+    }
+
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.hasMessage()) {
+            Message message = update.getMessage();
+
+            // Check if the message has text
+            if (message.hasText()) {
+                String chatId = message.getChatId().toString();
+                String userMessage = message.getText();
+
+                // Search for music based on the user's query
+                // Implement your music search logic here
+                String musicResults = searchMusic(userMessage);
+
+                // Send the results back to the user
+                SendMessage response = new SendMessage(chatId, musicResults);
+                try {
+                    execute(response);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String searchMusic(String query) {
+        // Implement your music search logic here
+        // Return the music results as a string
+        return "Music results for query: " + query;
+    }
+
+    public static void main(String[] args) {
+        MusicBot musicBot = new MusicBot();
+        musicBot.botConnect();
+    }
+
+    private void botConnect() {
+        try {
+            TelegramBotsApi botsApi = new TelegramBotsApi();
+            botsApi.registerBot(this);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+*****************************
+
+
+import com.wrapper.spotify.SpotifyApi;
+import com.wrapper.spotify.exceptions.SpotifyWebApiException;
+import com.wrapper.spotify.model_objects.specification.Track;
+import com.wrapper.spotify.model_objects.specification.TrackSimplified;
+import com.wrapper.spotify.requests.data.search.simplified.SearchTracksRequest;
+import org.apache.hc.core5.http.ParseException;
+
+// ...
+
+private String searchMusic(String query) {
+    // Set up the Spotify API credentials
+    SpotifyApi spotifyApi = new SpotifyApi.Builder()
+            .setClientId("YOUR_CLIENT_ID")
+            .setClientSecret("YOUR_CLIENT_SECRET")
+            .build();
+
+    // Set up the search request
+    SearchTracksRequest searchTracksRequest = spotifyApi.searchTracks(query)
+            .market("US")
+            .limit(5) // Limit the number of results
+            .offset(0)
+            .build();
+
+    try {
+        // Execute the search request and retrieve the results
+        TrackSimplified[] tracks = searchTracksRequest.execute().getItems();
+
+        // Create a StringBuilder to store the search results
+        StringBuilder resultBuilder = new StringBuilder();
+
+        // Iterate over the tracks and append the track details to the result
+        for (TrackSimplified track : tracks) {
+            resultBuilder.append("Track: ").append(track.getName()).append("\n");
+            resultBuilder.append("Artist(s): ");
+            for (ArtistSimplified artist : track.getArtists()) {
+                resultBuilder.append(artist.getName()).append(", ");
+            }
+            resultBuilder.delete(resultBuilder.length() - 2, resultBuilder.length()); // Remove the last comma and space
+            resultBuilder.append("\n\n");
+        }
+
+        // Return the search results as a string
+        return resultBuilder.toString();
+    } catch (ParseException | SpotifyWebApiException | IOException e) {
+        e.printStackTrace();
+    }
+
+    return "An error occurred while searching for music.";
+}
+***********************************
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class HttpRequestExample {
+    public static void main(String[] args) {
+        try {
+            // Create a URL object with the API endpoint
+            URL url = new URL("https://api.spotify.com/v1/search?q=query&type=track&limit=5");
+
+            // Open a connection to the URL
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Set the request method
+            connection.setRequestMethod("GET");
+
+            // Set the request headers (e.g., Authorization header for authentication)
+            connection.setRequestProperty("Authorization", "Bearer YOUR_ACCESS_TOKEN");
+
+            // Get the response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+
+            // Read the response body
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder responseBody = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseBody.append(line);
+            }
+            reader.close();
+
+            // Print the response body
+            System.out.println("Response Body:");
+            System.out.println(responseBody.toString());
+
+            // Close the connection
+            connection.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+***************************
+
+import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+public class MusicBot extends TelegramLongPollingBot {
+
+    // ... Bot setup and other methods ...
+
+    private void sendMusicToUser(String chatId, String musicFilePath) {
+        // Create a SendAudio request object
+        SendAudio sendAudio = new SendAudio(chatId, new InputFile(musicFilePath));
+
+        // Set the caption (optional)
+        sendAudio.setCaption("Enjoy the music!");
+
+        try {
+            // Send the audio file to the user
+            Message message = execute(sendAudio);
+            System.out.println("Music sent. Message ID: " + message.getMessageId());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        // ... Bot initialization and other setup ...
+
+        // Assuming you have the chat ID and music file path
+        String chatId = "USER_CHAT_ID";
+        String musicFilePath = "PATH_TO_MUSIC_FILE";
+
+        // Send the music to the user
+        musicBot.sendMusicToUser(chatId, musicFilePath);
+    }
+}
+*******************************

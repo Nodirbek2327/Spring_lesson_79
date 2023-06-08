@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean name = "professor" class="org.example.Professor">
+        <property name="age" value="28"/>
+        <property name="name" value="Alish"/>
+    </bean>
+
+    <bean name = "lesson" class="org.example.Lesson" autowire="byName">
+        <property name="name" value="java"/>
+    </bean>
+
+
+     <bean name = "professor1" class="org.example.Professor">
+         <property name="age" value="28"/>
+         <property name="name" value="Ali"/>
+     </bean>
+
+    <bean name = "professor2" class="org.example.Professor">
+        <constructor-arg value="22"/>
+        <constructor-arg value="Valish"/>
+    </bean>
+
+    <bean name = "lesson1" class="org.example.Lesson">
+        <property name="professor" ref="professor1"/>
+        <property name="name" value="database"/>
+    </bean>
+
+    <bean name = "lesson2" class="org.example.Lesson">
+        <property name="professor" ref="professor1"/>
+        <property name="name" value="java"/>
+    </bean>
+</beans>
