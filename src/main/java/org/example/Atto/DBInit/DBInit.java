@@ -2,7 +2,9 @@ package org.example.Atto.DBInit;
 
 
 import org.example.Atto.Container.ComponentContainer;
+import org.example.Atto.Dto.CardDto;
 import org.example.Atto.Dto.ProfileDto;
+import org.example.Atto.Enum.CardStatus;
 import org.example.Atto.Enum.ProfileRole;
 import org.example.Atto.Enum.ProfileStatus;
 import org.example.Atto.Repo.ProfileRepo;
@@ -11,9 +13,26 @@ import org.example.Atto.util.DBConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DBInit {
+
+    public static void createCompanyCard(){
+        CardDto cardDto = new CardDto();
+        cardDto.setCardNumber(7777777);
+        cardDto.setCardStatus(CardStatus.ACTIVE);
+        cardDto.setBalance(0.0);
+        cardDto.setCreatedDate(LocalDateTime.now());
+        cardDto.setUserPhone("998911111111");
+        cardDto.setExpDate(LocalDate.of(2050, 7,1));
+        boolean result= ComponentContainer.adminRepo.add_card(cardDto);
+        if(result){
+            System.out.println("card created successfully");
+        }else {
+            System.out.println("card not created");
+        }
+    }
 
     public static void createAdmin(){
         ProfileDto profileDto= new ProfileDto();

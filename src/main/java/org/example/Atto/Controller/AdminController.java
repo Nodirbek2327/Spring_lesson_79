@@ -8,6 +8,8 @@ import org.example.Atto.util.GetAction;
 import org.example.Atto.Enum.ProfileStatus;
 import org.example.Atto.Enum.CardStatus;
 
+import java.time.LocalDate;
+
 public class AdminController {
 
     private AdminService adminService;
@@ -25,13 +27,93 @@ public class AdminController {
                 case 3->updateCard();
                 case 4->changeCardStatus();
                 case 5->deleteCard();
+                case 6->createTerminal();
+                case 7->terminalList();
+                case 8->updateTerminal();
+                case 9->changeTerminalStatus();
+                case 10->deleteTerminal();
                 case 11->getProfileList();
                 case 12->changeProfileStatus();
+                case 13->transactionList();
+                case 14->companyCardBalance();
+                case 15->bugungiTulovlar();
+                case 16->kunlik();
+                case 17->oraliq();
+                case 18->umumiyBalance();
+                case 19->transactionByTerminal();
+                case 20->transactionByCard();
             }
         }
     }
 
+    private void transactionByCard() {
+    }
 
+    private void transactionByTerminal() {
+
+    }
+
+    private void umumiyBalance() {
+        adminService.companyCardBalance(profileDto.getPhone());
+    }
+
+    private void oraliq() {
+        System.out.println("Enter fromDate (yyyy-MM-dd):");
+        String fromDate= ComponentContainer.stringScanner.next();
+        System.out.println("Enter toDate (yyyy-MM-dd):");
+        String toDate= ComponentContainer.stringScanner.next();
+        adminService.oraliq(fromDate, toDate);
+    }
+
+    private void kunlik() {
+        System.out.println("Enter date (yyyy-MM-dd):");
+        String date= ComponentContainer.stringScanner.next();
+        adminService.bugun(LocalDate.parse(date));
+    }
+
+    private void bugungiTulovlar() {
+        adminService.bugun(LocalDate.now());
+    }
+
+    private void companyCardBalance() {
+        adminService.companyCardBalance(profileDto.getPhone());
+    }
+
+    private void transactionList() {
+        adminService.transactionList();
+    }
+
+    private void deleteTerminal() {
+        System.out.println("Enter terminal code:");
+        String code= ComponentContainer.stringScanner.next();
+        adminService.deleteTerminal(code);
+    }
+
+    private void changeTerminalStatus() {
+        System.out.println("Enter terminal code:");
+        String code= ComponentContainer.stringScanner.next();
+        adminService.changeTerminalStatus(code);
+    }
+
+    private void updateTerminal() {
+        System.out.println("Enter terminal code:");
+        String code= ComponentContainer.stringScanner.next();
+        System.out.println("Enter new address that you want :");
+        String newAddress= ComponentContainer.stringScanner.next();
+        adminService.updateTerminal(code, newAddress);
+    }
+
+    private void terminalList() {
+        adminService.getTerminals();
+    }
+
+    private void createTerminal() {
+        System.out.println("Enter terminal code:");
+        String code= ComponentContainer.stringScanner.next();
+        System.out.println("Enter terminal address:");
+        String address= ComponentContainer.stringScanner.next();
+        adminService.createTerminal(code, address);
+    }
 
 
     public  void show(){
@@ -48,7 +130,7 @@ public class AdminController {
                 "    7. Terminal List\n" +
                 "    8. Update Terminal (code,address)\n" +
                 "    9. Change Terminal Status\n" +
-                "    10. Delete\n" +
+                "    10. Delete Terminal\n" +
                 "\n" +
                 "    (Profile)\n" +
                 "    11. Profile List\n" +
@@ -56,24 +138,15 @@ public class AdminController {
                 "\n" +
                 "    (Transaction)\n" +
                 "    13. Transaction List\n" +
-                "        CardNumber, TerminalNumber, Amount,TransactionDate,Type (oxirgi birinchi ko'rinadi)\n" +
                 "    14. Company Card Balance\n" +
-                "        (card bo'ladi shu cardga to'lovlar tushadi. bu sql da insert qilinga bo'ladi)\n" +
                 "\n" +
                 "       (Statistic)\n" +
                 "    15. Bugungi to'lovlar\n" +
-                "         CardNumber, TerminalNumber, Amount,TransactionDate,Type (oxirgi birinchi ko'rinadi)\n" +
                 "    16. Kunlik to'lovlar (bir kunlik to'lovlar):\n" +
-                "        Enter Date: yyyy-MM-dd\n" +
-                "          CardNumber, TerminalNumber, Amount,TransactionDate,Type (oxirgi birinchi ko'rinadi)\n" +
                 "    17. Oraliq to'lovlar:\n" +
-                "        Enter FromDate: yyyy-MM-dd\n" +
-                "        Enter ToDate:   yyyy-MM-dd\n" +
                 "    18. Umumiy balance (company card dagi pulchalar)\n" +
                 "    19. Transaction by Terminal:\n" +
-                "        Enter terminal number:\n" +
                 "    20. Transaction By Card:\n" +
-                "        Enter Card number:" +
                 "     0. Exit"      );
     }
 

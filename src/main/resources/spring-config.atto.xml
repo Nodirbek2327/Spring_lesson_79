@@ -41,6 +41,7 @@
 
     <bean class="org.example.Atto.Service.AdminService" name="adminService">
         <property name="adminRepo" ref="adminRepo"/>
+        <property name="userRepo" ref="userRepo"/>
     </bean>
 
 

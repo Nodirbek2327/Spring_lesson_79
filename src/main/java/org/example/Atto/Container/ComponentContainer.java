@@ -1,6 +1,7 @@
 package org.example.Atto.Container;
 
 
+import org.example.Atto.Repo.AdminRepo;
 import org.example.Atto.Repo.ProfileRepo;
 
 import java.util.Scanner;
@@ -16,7 +17,7 @@ public class ComponentContainer {
 //    public static ProfileDto profileDto = null;
 //    public static AdminController adminController = new AdminController();
 //    public static AdminService adminService = new AdminService();
-//    public static AdminRepo adminRepo = new AdminRepo();
+   public static AdminRepo adminRepo = new AdminRepo();
     //    public static SmsService smsService = new SmsService();
 //    public static EskizSmsService eskizSmsService = new EskizSmsService();
     //public static SmsService smsService = new EskizSmsService();

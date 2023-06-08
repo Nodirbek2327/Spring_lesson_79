@@ -3,12 +3,14 @@ package org.example.Atto.Repo;
 
 import org.example.Atto.Dto.CardDto;
 import org.example.Atto.Dto.ProfileDto;
-import org.example.Atto.Enum.CardStatus;
-import org.example.Atto.Enum.ProfileRole;
-import org.example.Atto.Enum.ProfileStatus;
+import org.example.Atto.Dto.Terminal;
+import org.example.Atto.Dto.Transaction;
+import org.example.Atto.Enum.*;
 import org.example.Atto.util.DBConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -236,5 +238,244 @@ public class AdminRepo {
             }
         }
     }
+
+    public Terminal getTerminal(String code) {
+        String sql="select * from terminal where code=? and status = ?";
+        Connection connection=DBConnection.getConnection();
+        try {
+            PreparedStatement pr=connection.prepareStatement(sql);
+            pr.setString(1,code);
+            pr.setString(2, String.valueOf(TerminalStatus.ACTIVE));
+            ResultSet rs=pr.executeQuery();
+            if(rs.next()){
+                Terminal terminal = new Terminal();
+                terminal.setCode(rs.getString("code"));
+                terminal.setAddress(rs.getString("address"));
+                terminal.setStatus(TerminalStatus.valueOf(rs.getString("status")));
+                terminal.setCreated_date(LocalDateTime.parse(rs.getString("created_date")));
+                return terminal;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+    public void createTerminal(String code, String address) {
+        Connection connection= DBConnection.getConnection();
+        String sql="insert into terminal(code, address, status, created_date) values(?,?,?,?)";
+        try {
+            PreparedStatement pr= connection.prepareStatement(sql);
+            pr.setString(1,code);
+            pr.setString(2,address);
+            pr.setString(3, String.valueOf(TerminalStatus.ACTIVE));
+            pr.setString(3, String.valueOf(LocalDateTime.now()));
+            if (pr.executeUpdate()>0){
+                System.out.println("terminal created successfully");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public List<Terminal> getTerminals() {
+        Connection connection= DBConnection.getConnection();
+        List<Terminal> terminalList=new LinkedList<>();
+        String sql="select * from terminal";
+        try {
+            Statement statement=connection.createStatement();
+            ResultSet rs=statement.executeQuery(sql);
+            while (rs.next()){
+                Terminal terminal = new Terminal();
+                terminal.setCode(rs.getString("code"));
+                terminal.setAddress(rs.getString("address"));
+                terminal.setStatus(TerminalStatus.valueOf(rs.getString("status")));
+                terminal.setCreated_date(LocalDateTime.parse(rs.getString("created_date")));
+                terminalList.add(terminal);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return terminalList;
+    }
+
+    public void updateTerminal(String code, String newAddress) {
+        Connection connection=DBConnection.getConnection();
+        String sql="update terminal set address=? where code=?";
+        try {
+            PreparedStatement pr=connection.prepareStatement(sql);
+            pr.setString(1,newAddress);
+            pr.setString(2,code);
+            pr.executeUpdate();
+            if (pr.executeUpdate()>0){
+                System.out.println("updated successfully");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void changeterminalStatus(String code) {
+        Connection connection=DBConnection.getConnection();
+        String sql="update terminal set status=? where code=?";
+        try {
+            PreparedStatement pr=connection.prepareStatement(sql);
+            pr.setString(1, String.valueOf(TerminalStatus.NOT_ACTIVE));
+            pr.setString(2,code);
+            pr.executeUpdate();
+            if (pr.executeUpdate()>0){
+                System.out.println("changed successfully");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public void deleteTerminal(String code) {
+        Connection connection=DBConnection.getConnection();
+        String sql="update terminal set status=? where code=?";
+        try {
+            PreparedStatement pr=connection.prepareStatement(sql);
+            pr.setString(1, String.valueOf(TerminalStatus.NOT_ACTIVE));
+            pr.setString(2,code);
+            pr.executeUpdate();
+            if (pr.executeUpdate()>0){
+                System.out.println("success");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public List<Transaction> getTransactionList() {
+        Connection connection= DBConnection.getConnection();
+        List<Transaction> transactions=new LinkedList<>();
+        String sql="select * from transaction";
+        try {
+            Statement statement=connection.createStatement();
+            ResultSet rs=statement.executeQuery(sql);
+            while (rs.next()){
+                Transaction transaction = new Transaction();
+                transaction.setAmount(rs.getLong("amount"));
+                transaction.setId(rs.getInt("id"));
+                transaction.setCard_number(rs.getLong("card_number"));
+                transaction.setTerminal_code(rs.getString("terminal_code"));
+                transaction.setCreated_date(LocalDateTime.parse(rs.getString("created_date")));
+                transaction.setType(TransactionType.valueOf(rs.getString("type")));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return transactions;
+    }
+
+    public List<Transaction> getTransactionListToday(LocalDate now) {
+        Connection connection= DBConnection.getConnection();
+        List<Transaction> transactions=new LinkedList<>();
+        String sql="select * from transaction where created_date like  ?";
+
+        try {
+            PreparedStatement pr=connection.prepareStatement(sql);
+            pr.setString(1, now+"%");
+            ResultSet resultSet = pr.executeQuery();
+            while (resultSet.next()){
+                Transaction transaction = new Transaction();
+                transaction.setAmount(resultSet.getLong("amount"));
+                transaction.setId(resultSet.getInt("id"));
+                transaction.setCard_number(resultSet.getLong("card_number"));
+                transaction.setTerminal_code(resultSet.getString("terminal_code"));
+                transaction.setCreated_date(LocalDateTime.parse(resultSet.getString("created_date")));
+                transaction.setType(TransactionType.valueOf(resultSet.getString("type")));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return transactions;
+    }
+
+    public List<Transaction> getTransactionListOraliq(String fromDate, String toDate) {
+        Connection connection= DBConnection.getConnection();
+        List<Transaction> transactions=new LinkedList<>();
+        String sql="select * from transaction where created_date BETWEEN LIKE ? AND LIKE ? ";
+
+        try {
+            PreparedStatement pr=connection.prepareStatement(sql);
+            pr.setString(1, fromDate+"%");
+            pr.setString(2, toDate+"%");
+            ResultSet resultSet = pr.executeQuery();
+            while (resultSet.next()){
+                Transaction transaction = new Transaction();
+                transaction.setAmount(resultSet.getLong("amount"));
+                transaction.setId(resultSet.getInt("id"));
+                transaction.setCard_number(resultSet.getLong("card_number"));
+                transaction.setTerminal_code(resultSet.getString("terminal_code"));
+                transaction.setCreated_date(LocalDateTime.parse(resultSet.getString("created_date")));
+                transaction.setType(TransactionType.valueOf(resultSet.getString("type")));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return transactions;
+    }
 }
+
 
