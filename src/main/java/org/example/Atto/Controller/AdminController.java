@@ -7,13 +7,17 @@ import org.example.Atto.Service.AdminService;
 import org.example.Atto.util.GetAction;
 import org.example.Atto.Enum.ProfileStatus;
 import org.example.Atto.Enum.CardStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
 
+@Component
+@Controller
 public class AdminController {
-
+    @Autowired
     private AdminService adminService;
-
     private ProfileDto profileDto;
 
     public void start(){
@@ -47,6 +51,7 @@ public class AdminController {
     }
 
     private void transactionByCard() {
+
     }
 
     private void transactionByTerminal() {

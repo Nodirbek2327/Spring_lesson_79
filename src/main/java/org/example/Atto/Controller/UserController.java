@@ -6,10 +6,18 @@ import org.example.Atto.Dto.ProfileDto;
 import org.example.Atto.Enum.CardStatus;
 import org.example.Atto.Service.UserService;
 import org.example.Atto.util.GetAction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
+@Controller
+@Component
 public class UserController {
     private ProfileDto profileDto;
+    @Autowired
     private UserService userService;
+    @Autowired
     private AdminController adminController;
 
     public void start() {
@@ -21,9 +29,34 @@ public class UserController {
                 case 2 -> cardList();
                 case 3 -> cardChangeStatus();
                 case 4 -> deleteCard();
+                case 5 -> refill();
+                case 6 -> transactions();
+                case 7 -> payment();
                 case 0 -> t = false;
             }
         }
+    }
+
+    private void payment() {
+        System.out.println("Enter card number:");
+        int cardNum = ComponentContainer.intScanner.nextInt();
+        System.out.println("Enter terminal code:");
+        int code = ComponentContainer.intScanner.nextInt();
+        System.out.println("Enter money amount:");
+        long amount = ComponentContainer.longScanner.nextLong();
+        userService.payment(cardNum, code, amount, profileDto.getPhone());
+    }
+
+    private void transactions() {
+        userService.getTransactions();
+    }
+
+    private void refill() {
+        System.out.println("Enter card number:");
+        int cardNum = ComponentContainer.intScanner.nextInt();
+        System.out.println("Enter amount:");
+        long amount = ComponentContainer.longScanner.nextLong();
+        userService.refill(cardNum, amount, profileDto.getPhone());
     }
 
 

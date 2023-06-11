@@ -4,9 +4,13 @@ import org.example.Atto.Dto.ProfileDto;
 import org.example.Atto.Enum.ProfileRole;
 import org.example.Atto.Enum.ProfileStatus;
 import org.example.Atto.util.DBConnection;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 
+@Component
+@Repository
 public class ProfileRepo {
     public  boolean  addProfile(ProfileDto profileDto){
         Connection connection= DBConnection.getConnection();

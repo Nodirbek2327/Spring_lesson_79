@@ -2,13 +2,21 @@ package org.example.Atto.Service;
 
 import org.example.Atto.Dto.CardDto;
 import org.example.Atto.Dto.ProfileDto;
+import org.example.Atto.Dto.Terminal;
+import org.example.Atto.Dto.Transaction;
 import org.example.Atto.Enum.CardStatus;
 import org.example.Atto.Repo.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Component
+@Service
 public class UserService {
     private ProfileDto profileDto ;
+    @Autowired
     private UserRepo userRepo;
 
     public void addCard(int cardNum, String phone) {
@@ -51,7 +59,7 @@ public class UserService {
 
     public void deleteCard(int cardNum, String phone) {
         CardDto cardDto = userRepo.checkCardByNum(cardNum, phone);
-        if (cardDto != null) {
+        if (cardDto == null) {
             System.out.println("Card was not found!");
             return;
         }
@@ -71,5 +79,39 @@ public class UserService {
 
     public void setUserRepo(UserRepo userRepo) {
         this.userRepo = userRepo;
+    }
+
+    public void refill(int cardNum, long amount, String phone) {
+        CardDto cardDto = userRepo.checkCardByNum(cardNum, phone);
+        if (cardDto == null){
+            System.out.println("card not found");
+            return;
+        }
+        userRepo.refill(cardDto, amount);
+    }
+
+    public void getTransactions() {
+        List<Transaction> transactions = userRepo.getTransactions();
+        if (transactions.isEmpty()){
+            System.out.println("there no any transactions");
+            return;
+        }
+        transactions.forEach(System.out::println);
+    }
+
+    public void payment(int cardNum, int code, long amount, String phone) {
+        CardDto cardDto = userRepo.checkCardByNum(cardNum, phone);
+        Terminal terminal = userRepo.getTerminal(code);
+        if (cardDto==null){
+            System.out.println("card not found");
+            return;
+        }
+        if (terminal==null){
+            System.out.println("terminal not found");
+            return;
+        }
+        userRepo.update_card(cardDto, amount);
+        userRepo.payment(cardDto, terminal, amount);
+
     }
 }

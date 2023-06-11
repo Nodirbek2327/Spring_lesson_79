@@ -5,9 +5,15 @@ import org.example.Atto.Dto.ProfileDto;
 import org.example.Atto.Enum.CardStatus;
 import org.example.Atto.Service.ProfileService;
 import org.example.Atto.util.GetAction;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-public class MenuController {
-
+@Component
+@Controller
+public class MenuController /*implements InitializingBean*/ {
+    @Autowired
     private ProfileService profileService;
 
     public void start(){
@@ -63,4 +69,9 @@ public class MenuController {
     public void setProfileService(ProfileService profileService) {
         this.profileService = profileService;
     }
+
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        System.out.println("afterPropertiesSet");
+//    }
 }

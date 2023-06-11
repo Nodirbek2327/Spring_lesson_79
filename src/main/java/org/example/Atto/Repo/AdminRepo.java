@@ -7,6 +7,8 @@ import org.example.Atto.Dto.Terminal;
 import org.example.Atto.Dto.Transaction;
 import org.example.Atto.Enum.*;
 import org.example.Atto.util.DBConnection;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+@Component
+@Repository
 public class AdminRepo {
     public CardDto checkCardByNum(int cardNum){
         Connection connection= DBConnection.getConnection();
@@ -249,7 +253,7 @@ public class AdminRepo {
             ResultSet rs=pr.executeQuery();
             if(rs.next()){
                 Terminal terminal = new Terminal();
-                terminal.setCode(rs.getString("code"));
+                terminal.setCode(Integer.valueOf(rs.getString("code")));
                 terminal.setAddress(rs.getString("address"));
                 terminal.setStatus(TerminalStatus.valueOf(rs.getString("status")));
                 terminal.setCreated_date(LocalDateTime.parse(rs.getString("created_date")));
@@ -299,7 +303,7 @@ public class AdminRepo {
             ResultSet rs=statement.executeQuery(sql);
             while (rs.next()){
                 Terminal terminal = new Terminal();
-                terminal.setCode(rs.getString("code"));
+                terminal.setCode(Integer.valueOf(rs.getString("code")));
                 terminal.setAddress(rs.getString("address"));
                 terminal.setStatus(TerminalStatus.valueOf(rs.getString("status")));
                 terminal.setCreated_date(LocalDateTime.parse(rs.getString("created_date")));

@@ -8,12 +8,20 @@ import org.example.Atto.Enum.ProfileRole;
 import org.example.Atto.Enum.ProfileStatus;
 import org.example.Atto.Repo.ProfileRepo;
 import org.example.Atto.util.PhoneValidationUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Component
+@Service
 public class ProfileService {
+    @Autowired
     private ProfileRepo profileRepo;
+    @Autowired
     private UserController userController;
+    @Autowired
     private AdminController adminController;
 
     public void register(ProfileDto profileDto) {

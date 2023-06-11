@@ -6,43 +6,53 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="org.example"/>
 
-    <bean class="org.example.Atto.Controller.MenuController" name="menuController">
-    <property name="profileService" ref="profileService"/>
-    </bean>
+<!--    <bean class="org.example.Atto.Controller.MenuController" name="menuController">-->
+<!--    <property name="profileService" ref="profileService"/>-->
+<!--    </bean>-->
 
-    <bean class="org.example.Atto.Service.ProfileService" name="profileService">
-    <property name="profileRepo" ref="profileRepo"/>
-    <property name="adminController" ref="adminController"/>
-    <property name="userController" ref="userController"/>
-    </bean>
+<!--    <bean name="firstMenuController" class="org.example.Atto.Controller.MenuController"-->
+<!--          init-method="after" scope="singleton">-->
+<!--        <property name="profileService" ref="profileService"/>-->
+<!--    </bean>-->
 
-    <bean class="org.example.Atto.Repo.ProfileRepo" name="profileRepo"> </bean>
-    <bean class="org.example.Atto.Repo.UserRepo" name="userRepo"> </bean>
-    <bean class="org.example.Atto.Repo.AdminRepo" name="adminRepo"> </bean>
+<!--    <bean name="secondMenuController" class="org.example.Atto.Controller.MenuController" scope="prototype">-->
+<!--        <property name="profileService" ref="profileService"/>-->
+<!--    </bean>-->
+
+<!--    <bean class="org.example.Atto.Service.ProfileService" name="profileService">-->
+<!--    <property name="profileRepo" ref="profileRepo"/>-->
+<!--    <property name="adminController" ref="adminController"/>-->
+<!--    <property name="userController" ref="userController"/>-->
+<!--    </bean>-->
+
+<!--    <bean class="org.example.Atto.Repo.ProfileRepo" name="profileRepo"> </bean>-->
+<!--    <bean class="org.example.Atto.Repo.UserRepo" name="userRepo"> </bean>-->
+<!--    <bean class="org.example.Atto.Repo.AdminRepo" name="adminRepo"> </bean>-->
 
 
-    <bean class="org.example.Atto.Controller.UserController" name="userController">
-        <property name="userService" ref="userService"/>
-        <property name="adminController" ref="adminController"/>
-    </bean>
+<!--    <bean class="org.example.Atto.Controller.UserController" name="userController">-->
+<!--        <property name="userService" ref="userService"/>-->
+<!--        <property name="adminController" ref="adminController"/>-->
+<!--    </bean>-->
 
-    <bean class="org.example.Atto.Service.UserService" name="userService">
-        <property name="userRepo" ref="userRepo"/>
-    </bean>
+<!--    <bean class="org.example.Atto.Service.UserService" name="userService">-->
+<!--        <property name="userRepo" ref="userRepo"/>-->
+<!--    </bean>-->
 
 <!--    <bean class="org.example.Atto.DBInit.DBInit" name="DBInit">-->
 <!--        <property name="profileRepo" ref="profileRepo"/>-->
 <!--    </bean>-->
 
-    <bean class="org.example.Atto.Controller.AdminController" name="adminController">
-        <property name="adminService" ref="adminService"/>
-    </bean>
+<!--    <bean class="org.example.Atto.Controller.AdminController" name="adminController">-->
+<!--        <property name="adminService" ref="adminService"/>-->
+<!--    </bean>-->
 
-    <bean class="org.example.Atto.Service.AdminService" name="adminService">
-        <property name="adminRepo" ref="adminRepo"/>
-        <property name="userRepo" ref="userRepo"/>
-    </bean>
+<!--    <bean class="org.example.Atto.Service.AdminService" name="adminService">-->
+<!--        <property name="adminRepo" ref="adminRepo"/>-->
+<!--        <property name="userRepo" ref="userRepo"/>-->
+<!--    </bean>-->
 
 
 </beans>

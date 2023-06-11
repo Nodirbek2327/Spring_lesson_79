@@ -4,11 +4,13 @@ package org.example.Atto.Container;
 import org.example.Atto.Repo.AdminRepo;
 import org.example.Atto.Repo.ProfileRepo;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class ComponentContainer {
     public static Scanner stringScanner = new Scanner(System.in);
     public static Scanner intScanner = new Scanner(System.in);
+    public static Scanner longScanner = new Scanner(System.in);
 //    public static ProfileService profileService = new ProfileService();
     public static ProfileRepo profileRepo = new ProfileRepo();
 //    public static UserController userController = new UserController();

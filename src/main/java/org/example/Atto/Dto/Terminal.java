@@ -5,16 +5,16 @@ import org.example.Atto.Enum.TerminalStatus;
 import java.time.LocalDateTime;
 
 public class Terminal {
-    private String code;
+    private Integer code;
     private String address;
     private TerminalStatus status;
     private LocalDateTime created_date;
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

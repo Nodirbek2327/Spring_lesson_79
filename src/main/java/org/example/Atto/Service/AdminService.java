@@ -10,14 +10,20 @@ import org.example.Atto.Enum.CardStatus;
 import org.example.Atto.Enum.ProfileStatus;
 import org.example.Atto.Repo.AdminRepo;
 import org.example.Atto.Repo.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@Component
+@Service
 public class AdminService {
+    @Autowired
     private AdminRepo adminRepo;
+    @Autowired
     private UserRepo userRepo;
     public void createCard(int cardNum, int year ,int month){
         if(adminRepo.checkCardByNum(cardNum)!=null){
